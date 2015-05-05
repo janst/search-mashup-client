@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('myApp.view1', ['ngRoute', 'ngSanitize'])
 
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/view1', {
@@ -13,7 +13,8 @@ angular.module('myApp.view1', ['ngRoute'])
 
   }])
 
-  .controller('SearchCtrl', ['$scope', 'EnhetsService', 'TwitterService', '$http', function($scope, EnhetsService, TwitterService, $http) {
+  .controller('SearchCtrl', ['$scope', 'EnhetsService', 'TwitterService', 'GoogleSearchService', '$http',
+                    function($scope, EnhetsService, TwitterService, GoogleSearchService, $http) {
     var search = this;
 
     search.enhet = this;  // Check this out!
@@ -22,7 +23,7 @@ angular.module('myApp.view1', ['ngRoute'])
     search.search = function() {
       search.enhetresult = EnhetsService.query({query: search.query});
       search.twitterresult = TwitterService.query({query: search.query});
-
+      search.googleresult = GoogleSearchService.query({query: search.query});
     };
 
     search.hasEnhetData = function() {
@@ -48,6 +49,18 @@ angular.module('myApp.view1', ['ngRoute'])
 
     };
 
+    search.hasGoogleData = function() {
+      if (search.googleresult == undefined)
+        return false;
+      else if (search.googleresult.items == undefined)
+            return false;
+      else if (search.googleresult.items.length == 0)
+          return false;
+      else
+        return true;
+
+    };
+
     search.nextEnhet = function() {
       var size = search.enhetresult.page.size;
       var page = search.enhetresult.page.page;
@@ -59,6 +72,16 @@ angular.module('myApp.view1', ['ngRoute'])
       search.enhetresult = EnhetsService.query({query: search.query, page: page});
     };
 
+    search.nextGoogle = function() {
+      var nextPage = search.googleresult.queries.nextPage[0];
+      var nextIndex;
+      if (nextPage != undefined) {
+        nextIndex = nextPage.startIndex;
+        search.googleresult = GoogleSearchService.query({query: search.query, startIndex: nextIndex});
+      }
+
+    };
+
     search.previousEnhet = function() {
       var size = search.enhetresult.page.size;
       var page = search.enhetresult.page.page;
@@ -68,4 +91,17 @@ angular.module('myApp.view1', ['ngRoute'])
         page = page - 1;
       search.enhetresult = EnhetsService.query({query: search.query, page: page});
     };
+
+    search.previousGoogle = function() {
+      if (search.googleresult.queries.previousPage == undefined)
+        return;
+      var previousPage = search.googleresult.queries.previousPage[0];
+      var previousIndex;
+      if (previousPage != undefined) {
+        previousIndex = previousPage.startIndex;
+        search.googleresult = GoogleSearchService.query({query: search.query, startIndex: previousIndex});
+      }
+    };
+
+
   }]);

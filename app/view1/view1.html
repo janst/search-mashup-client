@@ -40,10 +40,35 @@
             <ul class="list-group no-bottom-margin-list borderless" ng-repeat="tweet in search.twitterresult">
             <li class="padding-adjustment-list list-group-item">
               <div>
-                {{tweet.text}}
+                <a target="_blank" href="https://twitter.com/{{tweet.user.screenName}}">{{ tweet.user.name }}</a> <span class="small">@{{tweet.user.screenName}}</span>
+                <p class="list-group-item-text">{{tweet.text}}</p>
+                <p ng-repeat="urls in tweet.urlentities">
+                  <a target="_blank" href="{{urls.url}}">{{urls.displayURL}}</a>
+                </p>
+
+
               </div>
               <div ng-bind-html="tweet.oEmbed.html"></div>
             </li>
+            </ul>
+
+            <div class="top-buffer" />
+            <h4 ng-show="search.hasGoogleData()" class="margin-headers-search-result">Googlesøk</h4>
+            <ul class="list-group no-bottom-margin-list borderless" ng-repeat="googleitem in search.googleresult.items">
+            <li class="padding-adjustment-list list-group-item">
+              <div>
+                <a target="_blank" href="{{googleitem.link}}">{{ googleitem.title }}</a>
+                <p class="item-link-text">{{googleitem.link}}</p>
+                <p ng-bind-html="googleitem.htmlSnippet"></p>
+              </div>
+              <div ></div>
+
+            </li>
+            </ul>
+
+            <ul class="pager">
+            <li><a ng-show="search.hasGoogleData()" ng-click="search.previousGoogle()">Previous</a></li>
+            <li><a ng-show="search.hasGoogleData()" ng-click="search.nextGoogle()">Next</a></li>
             </ul>
      </div>
      <div class="col-sm-2"></div>

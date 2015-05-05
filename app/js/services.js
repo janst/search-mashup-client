@@ -13,3 +13,10 @@ EnhetsServices.factory('EnhetsService', ['$resource',
         query: {method:'GET', params:{query:'dummy'}, isArray:true}
       });
     }]);
+
+  EnhetsServices.factory('GoogleSearchService', ['$resource',
+    function($resource){
+      return $resource("https://www.googleapis.com/customsearch/v1?key=AIzaSyDTNbFRr3SulSui3kTtbO5h08wtmwzQtD8&cx=:cx&q=:query&start=:startIndex", {}, {
+        query: {method:'GET', params:{query:'dummy', cx: '017522513355777753340:q6fivvdudhe', startIndex: '1'}, isArray:false}
+      });
+    }]);

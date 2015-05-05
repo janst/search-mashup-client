@@ -46,3 +46,9 @@
 .margin-headers-search-result {
     margin-left: 14px;
 }
+
+.item-link-text {
+  font-size: small;
+  color: #006621;
+  margin: 0 0;
+}
