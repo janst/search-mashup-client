@@ -9,7 +9,7 @@ EnhetsServices.factory('EnhetsService', ['$resource',
 
   EnhetsServices.factory('TwitterService', ['$resource',
     function($resource){
-      return $resource("http://localhost:8081/twitter/status/search/:query", {}, {
+      return $resource("http://twitter-search-api.cfapps.io/twitter/status/search/:query", {}, {
         query: {method:'GET', params:{query:'dummy'}, isArray:true}
       });
     }]);
